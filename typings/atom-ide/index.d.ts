@@ -1,5 +1,6 @@
 declare module 'atom-ide' {
   import { Disposable, Grammar, Point, Range, TextEditor } from 'atom';
+  import { TextSuggestion, SnippetSuggestion } from 'atom/autocomplete-plus';
 
   export interface OutlineProvider {
     name: string;
@@ -328,4 +329,16 @@ declare module 'atom-ide' {
     | 'rainbow';
 
   export type MessageKind = 'message' | 'request' | 'response';
+
+  // Autocomplete service
+
+  export interface LSPTextSuggestion extends TextSuggestion {
+    filterText: string;
+  }
+
+  export interface LSPSnippetSuggestion extends SnippetSuggestion {
+    filterText: string;
+  }
+
+  export type Suggestion = LSPTextSuggestion|LSPSnippetSuggestion;
 }

@@ -11,6 +11,7 @@ import {
 import * as ac from 'atom/autocomplete-plus';
 import { expect } from 'chai';
 import { createSpyConnection, createFakeEditor } from '../helpers.js';
+import { LSPTextSuggestion } from 'atom-ide';
 
 describe('AutoCompleteAdapter', () => {
   function createActiveServerSpy() {
@@ -196,7 +197,7 @@ describe('AutoCompleteAdapter', () => {
         documentation: 'a truly useful keyword',
       };
       const result: ac.TextSuggestion = { text: '' };
-      AutoCompleteAdapter.completionItemToSuggestion(completionItem, result, request);
+      AutoCompleteAdapter.completionItemToSuggestion(completionItem, result as LSPTextSuggestion, request);
       expect(result.text).equals('insert');
       expect(result.displayText).equals('label');
       expect(result.type).equals('keyword');
@@ -342,7 +343,7 @@ describe('AutoCompleteAdapter', () => {
   describe('applyTextEditToSuggestion', () => {
     it('does not do anything if there is no textEdit', () => {
       const completionItem: ac.TextSuggestion = { text: '' };
-      AutoCompleteAdapter.applyTextEditToSuggestion(undefined, new TextEditor(), completionItem);
+      AutoCompleteAdapter.applyTextEditToSuggestion(undefined, new TextEditor(), completionItem as LSPTextSuggestion);
       expect(completionItem).deep.equals({ text: '' });
     });
 
@@ -358,7 +359,7 @@ describe('AutoCompleteAdapter', () => {
       sinon.stub(editor, 'getTextInBufferRange').returns('replacementPrefix');
 
       const completionItem: ac.TextSuggestion = { text: '' };
-      AutoCompleteAdapter.applyTextEditToSuggestion(textEdit, editor, completionItem);
+      AutoCompleteAdapter.applyTextEditToSuggestion(textEdit, editor, completionItem as LSPTextSuggestion);
       expect(completionItem.replacementPrefix).equals('replacementPrefix');
       expect(completionItem.text).equals('newText');
       expect((editor as any).getTextInBufferRange.calledOnce).equals(true);

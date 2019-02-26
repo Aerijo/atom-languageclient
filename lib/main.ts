@@ -10,6 +10,7 @@ import DownloadFile from './download-file';
 import LinterPushV2Adapter from './adapters/linter-push-v2-adapter';
 
 export * from './auto-languageclient';
+
 export {
   AutoLanguageClient,
   Convert,
