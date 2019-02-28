@@ -24,13 +24,6 @@ describe('AutoCompleteAdapter', () => {
     };
   }
 
-  beforeEach(() => {
-    (global as any).sinon = sinon.sandbox.create();
-  });
-  afterEach(() => {
-    (global as any).sinon.restore();
-  });
-
   const request: ac.SuggestionsRequestedEvent = {
     editor: createFakeEditor(),
     bufferPosition: new Point(123, 456),
