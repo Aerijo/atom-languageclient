@@ -334,10 +334,12 @@ declare module 'atom-ide' {
 
   export interface LSPTextSuggestion extends TextSuggestion {
     filterText: string;
+    originalReplacementPrefix?: string;
   }
 
   export interface LSPSnippetSuggestion extends SnippetSuggestion {
     filterText: string;
+    originalReplacementPrefix?: string;
   }
 
   export type Suggestion = LSPTextSuggestion|LSPSnippetSuggestion;

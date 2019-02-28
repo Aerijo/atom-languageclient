@@ -26,6 +26,7 @@ interface SuggestionCacheEntry {
   isIncomplete: boolean;
   triggerPoint: Point;
   triggerChar: string;
+  triggerPrefixLength: number;
   suggestionMap: Map<Suggestion, PossiblyResolvedCompletionItem>;
 }
 
@@ -71,9 +72,6 @@ export default class AutocompleteAdapter {
     onDidConvertCompletionItem?: CompletionItemAdjuster,
     minimumWordLength?: number,
   ): Promise<ac.AnySuggestion[]> {
-
-    console.log("getting suggestions");
-
     const triggerChars = server.capabilities.completionProvider != null
       ? server.capabilities.completionProvider.triggerCharacters || []
       : [];
@@ -90,10 +88,17 @@ export default class AutocompleteAdapter {
     const suggestions = await
       this.getOrBuildSuggestions(server, request, triggerChar, triggerOnly, onDidConvertCompletionItem);
 
+    const cache = this._suggestionCache.get(server)!;
+
     // As the user types more characters to refine filter we must replace those characters on acceptance
     const replacementPrefix = (triggerChar !== '' && triggerOnly) ? '' : request.prefix;
     for (const suggestion of suggestions) {
-      suggestion.replacementPrefix = replacementPrefix;
+      if (suggestion.originalReplacementPrefix) {
+        suggestion.replacementPrefix =
+          suggestion.originalReplacementPrefix + replacementPrefix.substr(cache.triggerPrefixLength);
+      } else {
+        suggestion.replacementPrefix = replacementPrefix;
+      }
     }
 
     const filtered = !(request.prefix === "" || (triggerChar !== '' && triggerOnly));
@@ -141,7 +146,12 @@ export default class AutocompleteAdapter {
     // Setup the cache for subsequent filtered results
     const isComplete = completions == null || Array.isArray(completions) || completions.isIncomplete === false;
     const suggestionMap = this.completionItemsToSuggestions(completions, request, onDidConvertCompletionItem);
-    this._suggestionCache.set(server, { isIncomplete: !isComplete, triggerChar, triggerPoint, suggestionMap });
+    const triggerPrefixLength = ((triggerChar !== '' && triggerOnly) ? '' : request.prefix).length;
+    this._suggestionCache.set(server,
+      {
+        isIncomplete: !isComplete, triggerChar, triggerPrefixLength, triggerPoint, suggestionMap,
+      },
+    );
 
     return Array.from(suggestionMap.keys());
   }
@@ -363,7 +373,8 @@ export default class AutocompleteAdapter {
     suggestion: LSPTextSuggestion,
   ): void {
     if (textEdit) {
-      suggestion.replacementPrefix = editor.getTextInBufferRange(Convert.lsRangeToAtomRange(textEdit.range));
+      suggestion.originalReplacementPrefix = editor.getTextInBufferRange(Convert.lsRangeToAtomRange(textEdit.range));
+      suggestion.replacementPrefix = suggestion.originalReplacementPrefix;
       suggestion.text = textEdit.newText;
     }
   }
