@@ -1,3 +1,12 @@
+## v0.10.0 (unreleased)
+
+- Use language name for console name
+- AutoComplete
+  - Thoroughly handle null CompletionItems #251
+  - Filter completions using `sortText` if no prefix, and `filterText` when prefix exists #262
+  - Better custom replacement range support #264
+- Added refactor support (provide `provideRefactor` to `nuclide-refactor` version `0.0.0`) #270
+
 ## v0.9.9
 
 - Fixes (bugs introduced in v0.9.8)
