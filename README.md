@@ -47,7 +47,7 @@ The language server protocol consists of a number of capabilities. Some of these
 | textDocument/rangeFormatting    | Format Selection command      |
 | textDocument/onTypeFormatting   | Atom-IDE on type formatting   |
 | textDocument/onSaveFormatting   | Atom-IDE on save formatting   |
-| textDocument/rename             | TBD                           |
+| textDocument/rename             | Atom-IDE rename               |
 | textDocument/didChange          | Send on save                  |
 | textDocument/didOpen            | Send on open                  |
 | textDocument/didSave            | Send after save               |
@@ -158,7 +158,7 @@ If you want to switch back to the production version of atom-languageclient type
 
 We have various unit tests and some linter rules - you can run both of these locally using `npm test` to ensure your CI will get a clean build.
 
-### Guidance 
+### Guidance
 
 Always feel free to help out!  Whether it's [filing bugs and feature requests](https://github.com/atom/atom-languageclient/issues/new) or working on some of the [open issues](https://github.com/atom/atom-languageclient/issues), Atom's [contributing guide](https://github.com/atom/atom/blob/master/CONTRIBUTING.md) will help get you started while the [guide for contributing to packages](https://github.com/atom/atom/blob/master/docs/contributing-to-packages.md) has some extra information.
 
